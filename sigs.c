@@ -2,7 +2,7 @@
 #include "unistd.h"
 #include "dir.c"
 
-static int threshold;
+static int l, s;
 
 void print_sig_survey(const char* filename) {
 	int c, count = 0;
@@ -18,11 +18,11 @@ void print_sig_survey(const char* filename) {
 	file = fopen(filename, "r");
 
 	if(file != NULL) {
-
 		while((c = fgetc(file)) != EOF) {
 			if(c == '\n') {
 				count++;
 			}
+
 			if(c == '{' || c == '}' || c == ';') {
 				buf[len++] = c;
 				if(len == size) {
@@ -32,8 +32,8 @@ void print_sig_survey(const char* filename) {
 		}
 		
 		fclose(file);
-
-		if(count >= threshold) {
+		
+		if(count >= l) {
 
 			buf[len++] = '\0';	
 
@@ -54,10 +54,35 @@ void do_survey(const char* filename) {
 
 
 int main(int argc, char* argv[]) {
-	threshold = 0;
+  	l = 0;
+	s = 0;
+	int c;
 
-	if(argc > 1) {
-		sscanf (argv[1],"%d", &threshold);
+	opterr = 0;
+
+	while ((c = getopt (argc, argv, "l:s:")) != -1) {
+		switch (c)
+		{
+			case 'l':
+				l = atoi(optarg);
+				break;
+			case 's':
+				s = atoi(optarg);
+				break;
+			case '?':
+				if (optopt == 'l' || optopt == 's') {
+					fprintf (stderr, "Option -%c requires an argument.\n", optopt);
+				}
+				else if (isprint (optopt)) {
+					fprintf (stderr, "Unknown option `-%c'.\n", optopt);
+				}
+				else {
+					fprintf (stderr, "Unknown option character `\\x%x'.\n", optopt);
+				}
+				return 1;
+			default:
+				abort();
+		}
 	}
 
 	listdir(".", 0, do_survey);
