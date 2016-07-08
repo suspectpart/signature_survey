@@ -3,6 +3,7 @@
 #include "dir.c"
 
 static int l, s;
+static int total_statements;
 
 void print_sig_survey(const char* filename) {
 	int c, count = 0;
@@ -23,6 +24,10 @@ void print_sig_survey(const char* filename) {
 				count++;
 			}
 
+			if(c == ';') {
+				total_statements++;
+			}
+
 			if(c == '{' || c == '}' || c == ';') {
 				buf[len++] = c;
 				if(len == size) {
@@ -38,8 +43,8 @@ void print_sig_survey(const char* filename) {
 			buf[len++] = '\0';	
 
 			printf("%s ", filename);
-			printf("%s", buf);
-			printf(" (%d)\n", count);
+			printf("%d ", count);
+			printf("%s\n", buf);
 		}
 	}
 }
@@ -56,6 +61,7 @@ void do_survey(const char* filename) {
 int main(int argc, char* argv[]) {
   	l = 0;
 	s = 0;
+	total_statements = 0;
 	int c;
 
 	opterr = 0;
@@ -86,5 +92,6 @@ int main(int argc, char* argv[]) {
 	}
 
 	listdir(".", 0, do_survey);
+	printf("Total statements: %d\n", total_statements);
 	return 0;
 }
