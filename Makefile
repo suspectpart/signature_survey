@@ -1,2 +1,2 @@
 all:
-	gcc test.c -o main
+	gcc sigs.c -o sigs 
