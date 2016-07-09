@@ -8,11 +8,18 @@ To build, just checkout this repo and run make:
 ```Shell
 $ git clone git@github.com:suspectpart/signature_survey
 $ cd signature_survey
-$ make
+$ make && sudo make install
 ```
 
-And to run.
+`sigs` will be installed in `/usr/local/bin`. To run it call:
 
 ```Shell
-$ ./sigs -t .java -l 100
+$ sigs -t .java -l 100
 ``` 
+
+# Uninstall
+To uninstall `sigs` from your system, just run
+
+```Shell
+$ make uninstall
+```
