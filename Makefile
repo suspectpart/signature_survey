@@ -1,2 +1,2 @@
-all:
-	gcc sigs.c -o sigs 
+all: 
+	gcc sigs.c options.c survey.c -o sigs 
