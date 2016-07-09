@@ -1,10 +1,13 @@
 # Executables and test folders
-sigs
 junit4
 jquery
 
 # Vim swap files
 *.swp
+
+# Build stuff
+sigs.html
+sigs
 
 # Object files
 *.o
