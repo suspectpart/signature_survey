@@ -1,12 +1,11 @@
-#include <unistd.h>
-#include <sys/types.h>
 #include <dirent.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "dir.h"
+#include "options.h"
 
-void listdir(const char *name, int level, survey survey, const char* extension)
+void listdir(const char *name, int level, survey survey)
 {
 	DIR *dir;
 	struct dirent *entry;
@@ -28,11 +27,11 @@ void listdir(const char *name, int level, survey survey, const char* extension)
 				continue;
 			}
 
-			listdir(path, level + 1, survey, extension);
+			listdir(path, level + 1, survey);
 		}
 		else {
 			char *dot = strrchr(entry->d_name, '.');
-			if (dot && !strcmp(dot, extension)) {
+			if (dot && !strcmp(dot, options->extension)) {
 				char* fullPath = malloc(strlen(name) + strlen(entry->d_name) + 2);
 				strcpy(fullPath, name);
 				strcat(fullPath, "/");

@@ -16,7 +16,7 @@ int main(int argc, char* argv[]) {
 		return 1;
 	}
 
-	listdir(".", 0, print_sig_survey, options->extension);
+	listdir(".", 0, print_sig_survey);
 	printf("Total statements: %d\n", total_statements);
 	
 	free(options);

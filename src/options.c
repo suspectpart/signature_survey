@@ -7,7 +7,7 @@ int parse_options(int argc, char* argv[], Options* options) {
 	int c;
 	opterr = 0;
 
-	while ((c = getopt (argc, argv, "t:l:s:")) != -1) {
+	while ((c = getopt (argc, argv, "t:l:o:")) != -1) {
 		switch (c)
 		{
 			case 't':
@@ -16,8 +16,12 @@ int parse_options(int argc, char* argv[], Options* options) {
 			case 'l':
 				options->minLines = atoi(optarg);
 				break;
+			case 'o':
+				// TODO: check for valid formats
+				options->format = optarg;
+				break;
 			case '?':
-				if (optopt == 'l' || optopt == 't') {
+				if (optopt == 'l' || optopt == 't' || optopt == 'o') {
 					fprintf (stderr, "Option -%c requires an argument.\n", optopt);
 				}
 				else if (isprint (optopt)) {
@@ -30,6 +34,10 @@ int parse_options(int argc, char* argv[], Options* options) {
 			default:
 				abort();
 		}
+	}
+
+	if(options->format == NULL) {
+		options->format = "text";
 	}
 
 	return options->extension == NULL ? 1 : 0;

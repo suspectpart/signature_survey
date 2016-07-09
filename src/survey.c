@@ -1,6 +1,7 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 #include "survey.h"
 #include "unistd.h"
 #include "options.h"
@@ -18,10 +19,12 @@ void print_to_html(const char* filename, int lines, const char* survey) {
 	FILE* html;
 
 	if(first) {
+		char buf[1024];
+		getcwd(buf, sizeof(buf));
 		html = fopen("sigs.html", "w+");
 		fprintf(html, "<!DOCTYPE html>");
 		fprintf(html, "<head><title>Signature Survey</title></head>");
-		fprintf(html, "<h1>Signature Survey for Project X</h1><br />");
+		fprintf(html, "<h1>Signature Survey for %s</h1><br />", buf);
 		fprintf(html, "<html>");
 		first = 0;
 	} else {
@@ -65,9 +68,13 @@ void print_sig_survey(const char* filename) {
 		buf[len++] = '\0';	
 
 		if(lines >= options->minLines) {
-			print_to_stdout(filename, lines, buf);
-			print_to_html(filename, lines, buf);
+			if(strcmp(options->format, "text") == 0) {
+				print_to_stdout(filename, lines, buf);
+			} else {
+				print_to_html(filename, lines, buf);
+			}
 		}
 	}
+
 	free(buf);
 }
