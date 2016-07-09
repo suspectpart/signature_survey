@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 #include "survey.h"
 #include "unistd.h"
@@ -21,17 +22,25 @@ void print_to_html(const char* filename, int lines, const char* survey) {
 	if(first) {
 		char buf[1024];
 		getcwd(buf, sizeof(buf));
+
+		time_t rawtime;
+		struct tm * timeinfo;
+
+		time ( &rawtime );
+		timeinfo = localtime ( &rawtime );
+
 		html = fopen("sigs.html", "w+");
 		fprintf(html, "<!DOCTYPE html>");
 		fprintf(html, "<head><title>Signature Survey</title></head>");
-		fprintf(html, "<h1>Signature Survey for %s</h1><br />", buf);
+		fprintf(html, "<h1>Signature Survey for %s</h1>", buf);
+		fprintf(html, "<h4>Generated %s</h4>",asctime(timeinfo)); 
 		fprintf(html, "<html>");
 		first = 0;
 	} else {
 		html = fopen("sigs.html", "a+");
 	}
 
-	fprintf(html, "<a href='%s'>%s (%d)</a>: %s<br />", filename, filename, lines, survey);
+	fprintf(html, "<a class=""link"" href='%s'>%s (%d)</a>&nbsp;<span>%s</span><br />", filename, filename, lines, survey);
 	fclose(html);
 }
 
