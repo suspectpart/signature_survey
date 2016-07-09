@@ -1,5 +1,11 @@
+# Executables and test folders
 sigs
 junit4
+jquery
+
+# Vim swap files
+*.swp
+
 # Object files
 *.o
 *.ko
