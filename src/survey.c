@@ -71,11 +71,3 @@ void print_sig_survey(const char* filename) {
 	}
 	free(buf);
 }
-
-void do_survey(const char* filename) {
-	char *dot;
-	dot  = strrchr(filename, '.');
-	if (dot && !strcmp(dot, options->extension)) {
-		print_sig_survey(filename);
-	}		
-}

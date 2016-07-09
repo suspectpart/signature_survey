@@ -4,10 +4,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "dir.h"
 
-typedef void (*survey)(const char* filename);
-
-void listdir(const char *name, int level, survey survey)
+void listdir(const char *name, int level, survey survey, const char* extension)
 {
 	DIR *dir;
 	struct dirent *entry;
@@ -29,14 +28,17 @@ void listdir(const char *name, int level, survey survey)
 				continue;
 			}
 
-			listdir(path, level + 1, survey);
+			listdir(path, level + 1, survey, extension);
 		}
 		else {
-			char* fullPath = malloc(strlen(name) + strlen(entry->d_name) + 2);
-			strcpy(fullPath, name);
-			strcat(fullPath, "/");
-			strcat(fullPath, entry->d_name);
-			survey(fullPath);
+			char *dot = strrchr(entry->d_name, '.');
+			if (dot && !strcmp(dot, extension)) {
+				char* fullPath = malloc(strlen(name) + strlen(entry->d_name) + 2);
+				strcpy(fullPath, name);
+				strcat(fullPath, "/");
+				strcat(fullPath, entry->d_name);
+				survey(fullPath);
+			}		
 		}
     } while (entry = readdir(dir));
 

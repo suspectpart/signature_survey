@@ -1,9 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "unistd.h"
-#include "dir.c"
 #include "options.h"
 #include "sigs.h"
 #include "survey.h"
+#include "dir.h"
 
 int main(int argc, char* argv[]) {
 	options = (Options*) malloc(sizeof(Options));
@@ -15,7 +16,7 @@ int main(int argc, char* argv[]) {
 		return 1;
 	}
 
-	listdir(".", 0, do_survey);
+	listdir(".", 0, print_sig_survey, options->extension);
 	printf("Total statements: %d\n", total_statements);
 	
 	free(options);

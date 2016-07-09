@@ -1,5 +1,5 @@
 all: 
-	gcc src/sigs.c src/options.c src/survey.c -o sigs 
+	gcc src/sigs.c src/options.c src/survey.c src/dir.c -o sigs 
 
 clean:
 	rm -f sigs
