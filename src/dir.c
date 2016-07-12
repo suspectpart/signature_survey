@@ -5,41 +5,51 @@
 #include "dir.h"
 #include "options.h"
 
+typedef struct dirent* Directory;
+
+int is_current_or_parent(const Directory directory) {
+	return (
+			strcmp(directory->d_name, ".")  == 0
+		||  strcmp(directory->d_name, "..") == 0
+	);
+}
+
 void listdir(const char *name, int level, survey survey)
 {
 	DIR *dir;
-	struct dirent *entry;
+	Directory directory;
 
-    	if (!(dir = opendir(name))) {
+	if (!(dir = opendir(name))) {
 		return;
 	}
 
-	if (!(entry = readdir(dir))) {
+	if (!(directory = readdir(dir))) {
 		return;
 	}
 
 	do {
-		if (entry->d_type == DT_DIR) {
+		if (directory->d_type == DT_DIR) {
 			char path[1024];
-			int len = snprintf(path, sizeof(path)-1, "%s/%s", name, entry->d_name);
+			int len = snprintf(path, sizeof(path)-1, "%s/%s", name, directory->d_name);
 			path[len] = 0;
-			if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
+
+			if (is_current_or_parent(directory)) {
 				continue;
 			}
 
 			listdir(path, level + 1, survey);
 		}
 		else {
-			char *dot = strrchr(entry->d_name, '.');
+			char *dot = strrchr(directory->d_name, '.');
 			if (dot && !strcmp(dot, options->extension)) {
-				char* fullPath = malloc(strlen(name) + strlen(entry->d_name) + 2);
+				char* fullPath = malloc(strlen(name) + strlen(directory->d_name) + 2);
 				strcpy(fullPath, name);
 				strcat(fullPath, "/");
-				strcat(fullPath, entry->d_name);
+				strcat(fullPath, directory->d_name);
 				survey(fullPath);
-			}		
+			}
 		}
-    } while (entry = readdir(dir));
+    } while (directory = readdir(dir));
 
     closedir(dir);
 }
